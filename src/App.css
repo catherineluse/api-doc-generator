@@ -18,7 +18,7 @@ h3 {
 h4 {
   font-family: 'Roboto Mono', sans-serif;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   margin-top: 25px;
 }
 
@@ -57,8 +57,8 @@ hr {
 
 .content {
   background: #ffffff;
-  margin-left: 300px;
-  padding-left: 20px;
+  margin-left: 320px;
+  margin-right: 20px;
 }
 
 .contentH1 {
@@ -86,4 +86,19 @@ hr {
   color: black;
   font-family: 'Roboto', sans-serif;
   font-style: italic;
+}
+
+.resourceDefault {
+  color: black;
+  font-family: 'Roboto', sans-serif;
+}
+
+.dynamicField {
+  color: black;
+  font-family: 'Roboto', sans-serif;
+}
+
+.resourceDescription {
+  color: black;
+  font-family: 'Roboto', sans-serif;
 }

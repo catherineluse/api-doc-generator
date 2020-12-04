@@ -3,49 +3,78 @@ import globalSchemas from './globalSchemas'
 import clusterSchemas from './clusterSchemas'
 import projectSchemas from './projectSchemas'
 
+const filterOutTypes = schemas => {
+    const filtered = schemas.data.filter((schema, i) => {
+      const actions = schema.resourceActions;
+      // We only include a global scoped resource
+      // in the API docs for schemas if it has resourceActions.
+      // Otherwise it shows schemas that you 
+      // can't do anything with.
+      if (!actions){
+        return false;
+      }
+      return true;
+    })
+    return filtered;
+}
+
 const listEachSchema = schemas => {
-  return schemas.data.map((schema, i) => {
-    const actions = schema.resourceActions;
-    
-    // We only include a global scoped resource
-    // in the API docs if it has resourceActions.
-    // Otherwise it shows schemas that you 
-    // can't do anything with.
-    if (!actions){
-       return;
-    }
+  const filteredSchemas = filterOutTypes(schemas)
+  return filteredSchemas.map((schema, i) => {
     return <h3 key={i}><a href={`#${schema.id}`}>{schema.id}</a></h3>
   })
 }
-
 const listEachType = schemas => {
-  return schemas.data.map((schema, i) => {
+  const filteredTypes = filterOutSchemas(schemas)
+  return filteredTypes.map((schema, i) => {
+    return <h3 key={i}><a href={`#${schema.id}`}>{schema.id}</a></h3>
+  })
+}
+const filterOutSchemas = schemas => {
+    const filtered = schemas.data.filter((schema, i) => {
     const actions = schema.resourceActions;
-
-    // I assume a schema is a type
-    // only if no actions are available.
-    if (actions){
-      return;
+    // Assume a schema is a type if there are no actions available.
+    if (!actions){
+      return true;
     }
-    return (
-      <h3 key={i}><a href={`#${schema.id}`}>{schema.id}</a></h3>
-    )
+    return false;
+  })
+  return filtered;
+}
+
+const listCollectionMethods = methods => {
+  return methods.map(method => {
+    return (<li key={method}>{method}</li>)
   })
 }
 
 const listDetailedSchemas = schemas => {
-  return schemas.data.map((schema, i) => {
-    const actions = schema.resourceActions;
+  const filteredSchemas = filterOutTypes(schemas);
 
-    if (actions === undefined){
-      return;
-    }
+  return filteredSchemas.map((schema, i) => {
+    const actions = schema.resourceActions;
 
     const resourceFields = schema.resourceFields;
 
     return (
-      <>
-       <h3 id={`${schema.id}`} className="contentH3">{schema.id}</h3>
+      <div key={i} >
+       <h3 
+         id={`${schema.id}`} 
+         
+         className="contentH3"
+      >
+        {schema.id}
+      </h3>
+         <h4>HTTP Request</h4>
+         <p>{schema.links.collection || "None"}</p>
+         <h4>Collection Methods</h4>
+       
+           {schema.collectionMethods ? (
+             <ul>
+               {listCollectionMethods(schema.collectionMethods) }
+             </ul>
+           ): "None"}
+         
          <h4>Actions</h4>
          <table className="table table-sm table-striped">
            <thead >
@@ -59,55 +88,51 @@ const listDetailedSchemas = schemas => {
              {generateActionList(actions)}
            </tbody>
          </table>
-
+         
          <h4>Resource Fields</h4>
-         <table className="table table-sm table-striped">
+          <table className="table table-sm table-striped">
            <thead >
              <tr>
                <th scope="col">Name</th>
+               <th scope="col">Default</th>
                <th scope="col">Create</th>
                <th scope="col">Nullable</th>
                <th scope="col">Update</th>
-               <th scope="col">Default</th>
              </tr>
            </thead>
            <tbody>
              {generateResourceFieldList(resourceFields)}
            </tbody>
          </table>
-      </>
+      </div>
     )
   })
 }
 
-const listDetailedTypes = schemas => {
-  return schemas.data.map((schema, i) => {
-    const actions = schema.resourceActions;
-
-    if (actions){
-      return;
-    }
+const listDetailedTypes = (schemas) => {
+  const filteredTypes = filterOutSchemas(schemas)
+  return filteredTypes.map((schema, i) => {
 
     const resourceFields = schema.resourceFields;
     return (
-      <>
-      <h3 id={`${schema.id}`} className="contentH3">{schema.id}</h3>
-      <h4>Resource Fields</h4>
-          <table className="table table-sm table-striped">
-            <thead >
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Create</th>
-                <th scope="col">Nullable</th>
-                <th scope="col">Update</th>
-                <th scope="col">Default</th>
-              </tr>
-            </thead>
-            <tbody>
-              {generateResourceFieldList(resourceFields)}
-            </tbody>
-          </table>
-      </>
+      <div key={i}>
+        <h3 id={`${schema.id}`} className="contentH3">{schema.id}</h3>
+        <h4>Resource Fields</h4>
+            <table className="table table-sm table-striped">
+              <thead >
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Default</th>
+                  <th scope="col">Create</th>
+                  <th scope="col">Nullable</th>
+                  <th scope="col">Update</th>
+                </tr>
+              </thead>
+              <tbody>
+                {generateResourceFieldList(resourceFields)}
+              </tbody>
+            </table>
+      </div>
     )
   })
 }
@@ -115,53 +140,85 @@ const listDetailedTypes = schemas => {
 const generateActionList = actions => {
   let actionList = []
 
+  let i = 0;
   for (let actionName in actions) {
      const action = actions[actionName]
 
      actionList.push((
-       <tr>
+       <tr key={i}>
          <td>{actionName}</td>
-         <td>{action.input ? action.input : "None"}</td>
-         <td>{action.output ? action.output : "None"}</td>
+         <td>{action.input ? (<a href={`#${action.input}`}>{action.input}</a> ): "None"}</td>
+         <td>{action.output ? (<a href={`#${action.output}`}>{action.output}</a> ) : "None"}</td>
        </tr>
      ))
+     i++;
   }
   return actionList;
 }
 
-const generateResourceFieldList = resourceFields => {
+const generateResourceFieldList = (resourceFields) => {
   let resourceFieldList = []
-
+  let i = 0;
   for (let resourceFieldName in resourceFields) {
+    
     const resourceFieldData = resourceFields[resourceFieldName];
-    const { type, create, nullable, update, default: defaultValue } = resourceFieldData;
+    const { 
+      type, 
+      description, 
+      create, 
+      nullable, 
+      update, 
+      default: defaultValue, 
+      dynamicField,
+      options
+    } = resourceFieldData;
 
     resourceFieldList.push((
-      <tr>
+      <tr id={resourceFieldName} key={i}>
         <td 
           className="resourceField fieldName">
             {resourceFieldName}
-            <br/>
-            <div className="resourceType">{generateLinkToType(type)}</div>
+            <div 
+              className="resourceType">
+                {
+                  generateLinkToType(type, options)
+                }
+                
+            </div>
+            <div className="resourceDescription">{description || ""}</div>
+            <div className="dynamicField">{dynamicField ? "DynamicField." : ""}</div>
         </td>
+        <td className="resourceField">{JSON.stringify(defaultValue)}</td>
         <td className="resourceField">{JSON.stringify(create)}</td>
         <td className="resourceField">{JSON.stringify(nullable)}</td>
         <td className="resourceField">{JSON.stringify(update)}</td>
-        <td className="resourceField">{JSON.stringify(defaultValue)}</td>
       </tr>
     ))
+    i++;
   }
   return resourceFieldList;
 }
 
-const generateLinkToType = type => {
-  let typeName = type;
-  typeName.split("string").join("")
-  typeName.split("boolean").join("")
-  typeName.split("enum").join("")
-  return (
-    <a href={`#${type}`}>{typeName}</a>
-  )
+const generateLinkToType = (type, options) => {
+  if (type === "enum"){
+    return "enum. Options: " + JSON.stringify(options);
+  }
+  if (type === "bool"){
+    return "bool"
+  }
+  if (type === "string"){
+    return "string"
+  }
+  if (type.indexOf("map") !== 0){
+    return type
+  }
+  if (type.indexOf("array") !== 0){
+    return type
+  }
+  console.log('returned a link')
+  return (<a href={`#${type}`}>
+    {type}
+  </a>)
 }
 
 function App() {
@@ -175,7 +232,7 @@ function App() {
             <h2>Make Requests</h2>
             <h2>Levels of Scope</h2>
 
-          <h1>Tutorials</h1>
+          <h1>Examples</h1>
 
             <h2>Set up a Rancher Server</h2>
             <h2>Change Settings</h2>
