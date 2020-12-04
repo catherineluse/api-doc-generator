@@ -1,38 +1,89 @@
-.App {
-  text-align: center;
+
+h1 {
+  margin-top: 25px;
+  font-size: 25px;
+  font-family: 'Roboto', sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h2 {
+  font-size: 15px;
+  font-family: 'Roboto Mono', monospace;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+h3 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+h4 {
+  font-family: 'Roboto Mono', sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 25px;
 }
 
-.App-link {
-  color: #61dafb;
+a .active {
+  color: green;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+table {
+  font-size: 16px;
+}
+thead {
+  background-color: #f5f5f5;
+}
+
+hr {
+  height:2px;
+  border-width:0;
+  color:gray;
+  background-color:gray
+}
+
+.title {
+  font-size: 30px;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  bottom: 0px;
+  width: 280px;
+  background-color: #f5f5f5;
+  margin: 10px;
+  overflow: scroll;
+  padding-left: 10px;
+}
+
+.content {
+  background: #ffffff;
+  margin-left: 300px;
+  padding-left: 20px;
+}
+
+.contentH1 {
+  font-size: 35px;
+}
+
+.contentH2 {
+  margin-top: 30px;
+  font-size: 25px;
+}
+
+.contentH3 {
+  margin-top: 35px;
+  font-size: 25px;
+  color: darkblue;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.fieldName {
+  color: darkred;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.resourceType {
+  color: black;
+  font-family: 'Roboto', sans-serif;
+  font-style: italic;
 }
