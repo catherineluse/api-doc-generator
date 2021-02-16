@@ -168,6 +168,7 @@ const generateResourceFieldList = (resourceFields) => {
       create, 
       nullable, 
       update, 
+      required,
       default: defaultValue, 
       dynamicField,
       options
@@ -186,6 +187,7 @@ const generateResourceFieldList = (resourceFields) => {
                 
             </div>
             <div className="resourceDescription">{description || ""}</div>
+            <div className="resourceDescription">{required ? "Required." : "" }</div>
             <div className="dynamicField">{dynamicField ? "DynamicField." : ""}</div>
         </td>
         <td className="resourceField">{JSON.stringify(defaultValue)}</td>
@@ -225,24 +227,6 @@ function App() {
   return (
     <div >
       <div className="menu">
-          <h1 className="title">Rancher API Reference</h1>
-          <h1>Basics</h1>
-            <h2>Use the API in the Browser</h2>
-            <h2>Get API Keys</h2>
-            <h2>Make Requests</h2>
-            <h2>Levels of Scope</h2>
-
-          <h1>Examples</h1>
-
-            <h2>Set up a Rancher Server</h2>
-            <h2>Change Settings</h2>
-            <h2>Create a Custom Cluster</h2>
-            <h2>Set up a Registered Cluster</h2>
-            <h2>RBAC</h2>
-            <h2>Authentication</h2>
-            <h2>Node Templates</h2>
-            <h2>Cloud Credentials</h2>
-
           <h1>Schemas</h1>
 
              <h2>Global Scoped Schemas</h2>
