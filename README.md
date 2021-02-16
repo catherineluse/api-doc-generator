@@ -2,7 +2,20 @@ This project is intended to be a proof of concept to see if we can auto-generate
 
 I was successfully able to auto-generate lists of the fields for each resource. The resources are organized by scope: global, cluster, or project. The docs also indicate required fields.
 
-Eventually I would like to allow this project to connect to a live Rancher server and display API documentation for that particular server. For development purposes, I have taken the data from a Rancher server and downloaded the API information as JSON, and used the offline JSON source to build these docs. This is the equivalent of what is available from the Rancher API view.
+## Screenshots of Work in Progress
+
+### Schema with Collection Methods
+
+![Schema with collection methods](./screenshots/schema-with-collection-methods.png)
+
+### Type Showing Required Fields
+
+![Type with required fields](./screenshots/type-with-required-fields.png)
+
+
+## How it Works
+
+For development purposes, I have taken the data from a Rancher server and downloaded the API information as JSON, and used the offline JSON source to build these docs. This is the equivalent of what is available from the Rancher API view.
 
 The API's JSON schema output is in these files:
 
@@ -26,7 +39,9 @@ npm start
 
 The app runs on `http://localhost:3000/`.
 
-## Planned Sections
+## Plans
+
+Eventually I would like to allow this project to connect to a live Rancher server and display API documentation for that particular server. It would be nice if it could take a Rancher server URL and a bearer token, then show what operations the token has access to.
 
 The API docs will need to include these sections at a minimum:
 
